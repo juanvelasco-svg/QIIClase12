@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Química II | Clase 12: Electroquímica</title>
+
+<!-- Carga de MathJax -->
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    :root {
+        --QII-gold: #D97706; --QII-dark: #022C22; --QII-blue: #064E3B; --QII-light: #10B981;
+        --accent: #DC2626; --accent-orange: #F59E0B; --accent-purple: #7C3AED;
+        --text: #111827; --white: #ffffff; --sand: #FEF3C7; --shadow: rgba(0, 0, 0, 0.25);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    ul:not(.map-tree), ol { padding-left: 2.4rem; margin: 0.5rem 0 1rem; }
+    ul:not(.map-tree) { list-style: none; }
+    ul:not(.map-tree) li, ol li { margin: 0.45rem 0; }
+
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+    header { background: linear-gradient(135deg, var(--QII-dark) 0%, var(--QII-blue) 100%); color: var(--white); padding: 2rem; text-align: center; box-shadow: 0 6px 20px var(--shadow); position: relative; overflow: hidden; border-bottom: 5px solid var(--QII-gold); }
+    .logo-container { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .logo-qii { width: 120px; height: auto; background: var(--white); border-radius: 50%; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); color: var(--QII-gold); }
+    .subtitle { font-size: 1.2rem; opacity: 0.95; font-weight: 300; }
+    .nav-container { background: var(--QII-dark); padding: 1rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px var(--shadow); border-bottom: 2px solid var(--QII-gold); }
+    .nav-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem; max-width: 1400px; margin: 0 auto; }
+    .nav-btn { background: var(--QII-blue); color: var(--white); border: 1px solid var(--QII-gold); padding: 0.8rem 1.5rem; border-radius: 25px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-size: 0.95rem; }
+    .nav-btn:hover, .nav-btn.active { background: var(--QII-gold); color: var(--QII-dark); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(234, 179, 8, 0.4); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; animation: fadeIn 0.5s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .card { background: var(--white); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 8px 24px var(--shadow); border-left: 6px solid var(--QII-gold); transition: transform 0.3s ease; }
+    .card:hover { transform: translateY(-3px); }
+    h2 { color: var(--QII-blue); margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 3px solid var(--QII-gold); display: flex; align-items: center; gap: 0.8rem; font-size: 2rem; }
+    h3 { color: var(--QII-light); margin: 1.5rem 0 1rem; font-size: 1.5rem; }
+    p { margin-bottom: 1rem; }
+    .molecule-img { max-width: 100%; max-height: 450px; height: auto; border-radius: 12px; margin: 1rem 0; box-shadow: 0 4px 12px var(--shadow); object-fit: contain; }
+    .img-container { text-align: center; margin: 2rem 0; background: #f8fafc; padding: 1.5rem; border-radius: 12px; border: 1px dashed var(--QII-gold); }
+    .img-caption { font-style: italic; color:#666; margin-top: 0.5rem; font-size: 0.95rem; }
+    .calculator { background: linear-gradient(135deg, #fefcbf 0%, #fef3c7 100%); border: 3px solid var(--QII-gold); border-radius: 16px; padding: 2rem; margin: 2rem 0; }
+    .calc-title { color: var(--QII-dark); font-size: 1.6rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem; font-weight: bold; }
+    .calc-input-group { margin: 1rem 0; }
+    .calc-input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--QII-dark); }
+    .calc-input-group input, .calc-input-group select { width: 100%; padding: 0.8rem; border: 2px solid var(--QII-gold); border-radius: 8px; font-size: 1rem; transition: border-color 0.3s; background: #fff; }
+    .calc-input-group input:focus, .calc-input-group select:focus { outline: none; border-color: var(--QII-blue); }
+    .calc-button { background: var(--QII-dark); color: var(--QII-gold); border: 2px solid var(--QII-gold); padding: 1rem 2rem; border-radius: 30px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--shadow); }
+    .calc-button:hover { background: var(--QII-gold); color: var(--QII-dark); transform: translateY(-2px); }
+    .calc-result { background: var(--white); border-left: 5px solid var(--accent); padding: 1.5rem; margin-top: 1.5rem; border-radius: 8px; font-size: 1.1rem; display: none; }
+    .calc-result.show { display: block; animation: slideIn 0.5s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px var(--shadow); }
+    th { background: linear-gradient(135deg, var(--QII-dark) 0%, var(--QII-blue) 100%); color: var(--QII-gold); padding: 1.2rem; text-align: left; font-weight: 600; }
+    td { padding: 1rem 1.2rem; border-bottom: 1px solid #e2e8f0; transition: background 0.3s; }
+    tr:hover td { background: #fefcbf; }
+    .info-box { background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%); border-left: 5px solid #3182ce; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0; }
+    .tip-box { background: linear-gradient(135deg, #fefcbf 0%, #fef3c7 100%); border-left: 5px solid var(--QII-gold); padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0; }
+    .bio-box { background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%); border-left: 5px solid #319795; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0; }
+    .pharma-box { background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%); border-left: 5px solid var(--accent); padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0; }
+    .problem-box { background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%); border-left: 5px solid #38a169; padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0; }
+    details.solution { margin-top: 1rem; background: #f8fafc; border: 2px solid var(--QII-light); border-radius: 10px; padding: 0.8rem 1.2rem; }
+    details.solution summary { cursor: pointer; font-weight: 700; color: var(--QII-blue); }
+    details.solution[open] summary { margin-bottom: 0.8rem; border-bottom: 1px dashed var(--QII-light); padding-bottom: .4rem; }
+    .mnemonic-card { background: linear-gradient(135deg, #fff5f5 0%, #feebc8 100%); border: 3px solid var(--accent-orange); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; position: relative; overflow: hidden; }
+    .mnemonic-title { color: var(--accent-orange); font-weight: 700; margin-bottom: 0.8rem; font-size: 1.2rem; }
+    .glossary-term { background: var(--white); border: 2px solid var(--QII-gold); border-radius: 8px; padding: 1rem; margin: 0.8rem 0; cursor: pointer; transition: all 0.3s; }
+    .glossary-term:hover { background: #fefcbf; transform: translateX(5px); }
+    .glossary-definition { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--QII-gold); }
+    .glossary-definition.show { display: block; animation: fadeIn 0.3s ease; }
+    .error-card { background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%); border-left: 5px solid var(--accent); padding: 1.5rem; margin: 1rem 0; border-radius: 0 12px 12px 0; }
+    .error-title { color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
+    .correction { background: #c6f6d5; border-left: 3px solid #38a169; padding: 1rem; margin-top: 1rem; border-radius: 0 8px 8px 0; }
+    .quiz-container { background: linear-gradient(135deg, var(--QII-dark) 0%, var(--QII-blue) 100%); color: var(--white); border-radius: 16px; padding: 2rem; margin: 2rem 0; border: 3px solid var(--QII-gold); }
+    .quiz-question-card { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--QII-gold); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .quiz-question { font-size: 1.2rem; margin-bottom: 1rem; font-weight: 600; color: var(--QII-gold); }
+    .quiz-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.8rem; }
+    .quiz-option { background: var(--white); color: var(--text); border: 2px solid transparent; padding: 0.9rem 1.2rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 500; text-align: left; }
+    .quiz-option:hover:not(:disabled) { border-color: var(--QII-gold); transform: translateY(-2px); }
+    .quiz-option:disabled { cursor: not-allowed; opacity: 0.9; }
+    .quiz-option.correct { background: #38a169; color: white; border-color: #22543d; }
+    .quiz-option.incorrect { background: #e53e3e; color: white; border-color: #742a2a; }
+    .quiz-explanation { margin-top: 0.8rem; padding: 0.8rem; background: rgba(255,255,255,0.15); border-radius: 6px; font-size: 0.95rem; color: #fff; display: none; }
+    .quiz-progress { max-width: 720px; margin: 0 auto 1rem; }
+    .quiz-progress-bar-bg { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+    .quiz-progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--QII-gold), var(--accent-orange)); transition: width 0.4s; }
+    .quiz-stats { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; margin: 1rem 0; }
+    .quiz-stat { padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 700; color: #fff; font-size: 0.95rem; background: var(--QII-light); }
+    .footer { background: var(--QII-dark); color: var(--white); text-align: center; padding: 2.5rem; margin-top: 3rem; border-top: 5px solid var(--QII-gold); }
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0; border-radius: 12px; box-shadow: 0 4px 12px var(--shadow); }
+    .table-responsive table { min-width: 600px; width: 100%; margin: 0; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tab { background: #e2e8f0; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+    .tab.active { background: var(--QII-gold); color: var(--QII-dark); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+    .fc-stats { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; margin: 1rem 0; }
+    .fc-stat { padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 700; color: #fff; font-size: 0.95rem; }
+    .fc-stat.good { background: #38a169; } .fc-stat.bad { background: #e53e3e; } .fc-stat.pending { background: #4a5568; } .fc-stat.total { background: var(--QII-blue); }
+    .fc-progress { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; max-width: 720px; margin: 0 auto 1.5rem; }
+    .fc-progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--QII-gold), var(--accent)); transition: width 0.4s; }
+    .flashcard-scene { perspective: 1400px; max-width: 720px; height: 320px; margin: 0 auto 1.5rem; }
+    .flashcard { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .fc-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; padding: 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: auto; box-shadow: 0 8px 24px var(--shadow); font-size: 1.15rem; }
+    .fc-front { background: linear-gradient(135deg, var(--QII-dark), var(--QII-blue)); color: #fff; border: 3px solid var(--QII-gold); }
+    .fc-back { background: linear-gradient(135deg, #fff, #fefcbf); color: var(--text); border: 3px solid var(--QII-gold); transform: rotateY(180deg); }
+    .fc-label { font-size: 0.85rem; letter-spacing: 2px; font-weight: 800; color: var(--QII-gold); margin-bottom: 1rem; }
+    .fc-hint { margin-top: 1rem; font-size: 0.85rem; opacity: 0.8; font-style: italic; }
+    .fc-controls { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+    .fc-btn { border: none; padding: 0.9rem 2rem; border-radius: 30px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.3s; color: #fff; }
+    .fc-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .fc-btn.good { background: #38a169; } .fc-btn.bad { background: #e53e3e; }
+    .fc-btn:not(:disabled):hover { transform: translateY(-3px); }
+    .map-container { overflow-x: auto; padding: 1rem 0; }
+    .map-tree, .map-tree ul { list-style: none; margin: 0; padding-left: 0; }
+    .map-tree ul { display: none; padding-left: 1.6rem; margin: 0.6rem 0 0; border-left: 3px solid var(--QII-gold); }
+    .map-tree li.open > ul { display: block; animation: fadeIn 0.4s ease; }
+    .map-tree li { margin: 0.4rem 0; }
+    .map-node { display: inline-block; background: var(--QII-dark); color: #fff; padding: 0.6rem 1.1rem; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s; border: 1px solid var(--QII-gold); }
+    .map-node:hover { background: var(--QII-gold); color: var(--QII-dark); transform: translateX(4px); }
+    .map-node.root { background: var(--accent); color: white; font-size: 1.15rem; border: none; }
+    .map-node.branch { background: var(--QII-blue); }
+    .map-leaf { display: inline-block; background: #fff; color: var(--text); padding: 0.45rem 0.9rem; border-radius: 8px; font-size: 0.95rem; border: 2px solid var(--QII-gold); }
+    li.has-children > .map-node::before { content: '▶ '; font-size: 0.8em; }
+    li.has-children.open > .map-node::before { content: '▼ '; font-size: 0.8em; }
+
+    @media (max-width: 768px) {
+        h1 { font-size: 1.8rem; } h2 { font-size: 1.5rem; } h3 { font-size: 1.2rem; }
+        .logo-container { flex-direction: column; gap: 1rem; } .logo-qii { width: 80px; }
+        .container { padding: 1rem; } .card { padding: 1.5rem; }
+        .nav-buttons { gap: 0.5rem; } .nav-btn { padding: 0.6rem 1rem; font-size: 0.75rem; }
+        .quiz-options { grid-template-columns: 1fr; }
+        .tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 0.5rem; }
+        .tab { flex-shrink: 0; padding: 0.6rem 1rem; font-size: 0.9rem; }
+        .flashcard-scene { height: 360px; } .fc-face { font-size: 1rem; padding: 1rem; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="Logo-QII.png" alt="Logo QII" class="logo-qii">
+        <div>
+            <h1>QUÍMICA II</h1>
+            <p class="subtitle">Unidad 4: Electroquímica</p>
+            <p class="subtitle">Clase 12: Redox, Celdas Galvánicas y Electrolíticas</p>
+        </div>
+    </div>
+</header>
+
+<nav class="nav-container">
+    <div class="nav-buttons" id="navButtons">
+        <button class="nav-btn active" type="button" data-section="inicio">🏠 Inicio</button>
+        <button class="nav-btn" type="button" data-section="conceptos">📚 Conceptos</button>
+        <button class="nav-btn" type="button" data-section="mapa">🗺️ Mapa</button>
+        <button class="nav-btn" type="button" data-section="flashcards">🃏 Flashcards</button>
+        <button class="nav-btn" type="button" data-section="calculadoras">🧮 Herramientas</button>
+        <button class="nav-btn" type="button" data-section="aplicaciones">🏥 Aplicaciones</button>
+        <button class="nav-btn" type="button" data-section="mnemotecnias">🧠 Mnemotecnias</button>
+        <button class="nav-btn" type="button" data-section="glosario">📖 Glosario</button>
+        <button class="nav-btn" type="button" data-section="errores">⚠️ Errores</button>
+        <button class="nav-btn" type="button" data-section="bibliografia">📚 Bibliografía</button>
+        <button class="nav-btn" type="button" data-section="quiz">🎯 Quiz</button>
+    </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ INICIO ============ -->
+<section id="inicio" class="section active">
+    <div class="card">
+        <h2>🎯 Resultados del Aprendizaje</h2>
+        <div class="info-box">
+            <ul style="font-size: 1.1rem; line-height: 2;">
+                <li>✓ Comprender los conceptos de oxidación, reducción, agente oxidante y agente reductor.</li>
+                <li>✓ Balancear ecuaciones redox por el método del ion-electrón en medio ácido y básico.</li>
+                <li>✓ Utilizar los potenciales estándar de reducción para predecir la espontaneidad de reacciones redox.</li>
+                <li>✓ Identificar y diagramar celdas galvánicas, calculando su potencial estándar.</li>
+                <li>✓ Distinguir entre celdas galvánicas y electrolíticas, y realizar cálculos cuantitativos de electrólisis.</li>
+                <li>✓ Aplicar los principios electroquímicos a sistemas biológicos y farmacéuticos.</li>
+            </ul>
+        </div>
+
+        <h3>🔬 Relevancia Profesional</h3>
+        <div class="bio-box">
+            <div><strong>¿Por qué el estudiante de ciencias de la salud debe dominar la electroquímica?</strong>
+                <ul style="font-size: 1rem; margin-top: 1rem;">
+                    <li>• <strong>Fisiología celular:</strong> El potencial de membrana y la transmisión de impulsos nerviosos dependen de gradientes iónicos y procesos redox (ej. bomba Na⁺/K⁺, cadena de transporte de electrones).</li>
+                    <li>• <strong>Bioquímica clínica:</strong> Muchos análisis de laboratorio (glucosa, colesterol) utilizan electrodos enzimáticos basados en reacciones redox.</li>
+                    <li>• <strong>Farmacia:</strong> La estabilidad de fármacos y la liberación controlada pueden involucrar reacciones de oxidación-reducción. Además, los sensores electroquímicos son clave en el monitoreo de medicamentos.</li>
+                    <li>• <strong>Nutrición:</strong> El metabolismo energético es una serie de reacciones redox (ej. ciclo de Krebs, fosforilación oxidativa). Los antioxidantes (vitaminas C, E) actúan como agentes reductores.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ CONCEPTOS ============ -->
+<section id="conceptos" class="section">
+    <div class="card">
+        <h2>📚 Conceptos Clave: Electroquímica</h2>
+        <div id="conceptos-tabs" class="tab-group">
+            <div class="tabs" id="conceptosTabHeaders">
+                <button class="tab active" type="button" data-tab="sub-redox">⚡ Redox</button>
+                <button class="tab" type="button" data-tab="sub-balanceo">⚖️ Balanceo</button>
+                <button class="tab" type="button" data-tab="sub-potencial">🔋 Potenciales</button>
+                <button class="tab" type="button" data-tab="sub-galvanica">🔌 Galvánicas</button>
+                <button class="tab" type="button" data-tab="sub-electrolisis">💧 Electrólisis</button>
+            </div>
+
+            <!-- SUB: REDOX -->
+            <div id="sub-redox" class="tab-content active">
+                <h3>⚡ Reacciones de Óxido-Reducción</h3>
+                <div class="info-box">
+                    <p>Una reacción redox implica la <strong>transferencia de electrones</strong> entre especies. La especie que pierde electrones se <strong>oxida</strong> (aumenta su número de oxidación) y actúa como <strong>agente reductor</strong>. La especie que gana electrones se <strong>reduce</strong> (disminuye su número de oxidación) y actúa como <strong>agente oxidante</strong>.</p>
+                </div>
+                <div class="tip-box">
+                    <strong>Número de oxidación:</strong> Carga ficticia que tendría un átomo si los electrones de enlace se asignaran al átomo más electronegativo. Reglas básicas:
+                    <ul>
+                        <li>Elemento libre: 0</li>
+                        <li>Ion monoatómico: su carga</li>
+                        <li>H: +1 (excepto hidruros metálicos -1)</li>
+                        <li>O: -2 (excepto peróxidos -1 y superóxidos -½)</li>
+                        <li>Suma de números de oxidación en una molécula neutra = 0; en un ion = carga del ion.</li>
+                    </ul>
+                </div>
+                <div class="problem-box">
+                    <p><strong>Ejemplo:</strong> En la reacción $Zn(s) + Cu^{2+}(ac) \rightarrow Zn^{2+}(ac) + Cu(s)$:</p>
+                    <ul>
+                        <li>Zn: 0 → +2 (se oxida, agente reductor)</li>
+                        <li>Cu: +2 → 0 (se reduce, agente oxidante)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SUB: BALANCEO -->
+            <div id="sub-balanceo" class="tab-content">
+                <h3>⚖️ Balanceo de Ecuaciones Redox (Método Ion-Electrón)</h3>
+                <div class="info-box">
+                    <p>El método del ion-electrón separa la reacción en dos semirreacciones: una de oxidación y otra de reducción. Se balancean por separado en medio ácido o básico y luego se igualan los electrones transferidos.</p>
+                </div>
+                <h4>Pasos en medio ácido:</h4>
+                <ol>
+                    <li>Escribir la ecuación iónica esqueleto.</li>
+                    <li>Separar en semirreacciones (oxidación y reducción).</li>
+                    <li>Balancear los átomos distintos de H y O.</li>
+                    <li>Balancear O añadiendo $H_2O$.</li>
+                    <li>Balancear H añadiendo $H^+$.</li>
+                    <li>Balancear cargas añadiendo electrones ($e^-$).</li>
+                    <li>Igualar electrones perdidos y ganados (multiplicar por enteros).</li>
+                    <li>Sumar semirreacciones y simplificar.</li>
+                </ol>
+                <div class="tip-box">
+                    <strong>En medio básico:</strong> Una vez balanceada en ácido, añadir $OH^-$ a ambos lados para neutralizar los $H^+$ y formar $H_2O$. Luego simplificar.
+                </div>
+                <div class="problem-box">
+                    <p><strong>Ejemplo (ácido):</strong> Balancear $Cr_2O_7^{2-} + Fe^{2+} \rightarrow Cr^{3+} + Fe^{3+}$</p>
+                    <details class="solution">
+                        <summary>Ver solución</summary>
+                        <p>Reducción: $14H^+ + Cr_2O_7^{2-} + 6e^- \rightarrow 2Cr^{3+} + 7H_2O$</p>
+                        <p>Oxidación: $Fe^{2+} \rightarrow Fe^{3+} + e^-$ (×6)</p>
+                        <p>Suma: $14H^+ + Cr_2O_7^{2-} + 6Fe^{2+} \rightarrow 2Cr^{3+} + 6Fe^{3+} + 7H_2O$</p>
+                    </details>
+                </div>
+            </div>
+
+            <!-- SUB: POTENCIALES -->
+            <div id="sub-potencial" class="tab-content">
+                <h3>🔋 Potenciales Estándar de Reducción</h3>
+                <div class="info-box">
+                    <p>El <strong>potencial estándar de reducción ($E^\circ$)</strong> mide la tendencia de una especie a ganar electrones. Se mide frente al <strong>Electrodo Estándar de Hidrógeno (EEH)</strong> al que se asigna $E^\circ = 0.00$ V.</p>
+                    <p>Una reacción redox es <strong>espontánea</strong> si $E^\circ_{celda} > 0$, donde $E^\circ_{celda} = E^\circ_{reducción} + E^\circ_{oxidación}$ (cambiando el signo para la oxidación).</p>
+                </div>
+                <div class="tip-box">
+                    <strong>Tabla de potenciales (a 25°C):</strong> Cuanto más positivo el $E^\circ$, mayor la tendencia a reducirse (mejor agente oxidante). Cuanto más negativo, mayor tendencia a oxidarse (mejor agente reductor).
+                </div>
+                <div class="problem-box">
+                    <p><strong>Ejemplo:</strong> $Zn^{2+} + 2e^- \rightarrow Zn$ $E^\circ=-0.76$ V; $Cu^{2+} + 2e^- \rightarrow Cu$ $E^\circ=+0.34$ V.</p>
+                    <p>Reacción espontánea: $Zn(s) + Cu^{2+} \rightarrow Zn^{2+} + Cu(s)$</p>
+                    <p>$E^\circ_{celda} = 0.34 + 0.76 = 1.10$ V (espontánea).</p>
+                </div>
+            </div>
+
+            <!-- SUB: GALVÁNICAS -->
+            <div id="sub-galvanica" class="tab-content">
+                <h3>🔌 Celdas Galvánicas (Voltaicas)</h3>
+                <div class="info-box">
+                    <p>Una celda galvánica convierte <strong>energía química espontánea</strong> en energía eléctrica. Consta de dos semiceldas (ánodo y cátodo) conectadas por un puente salino y un circuito externo.</p>
+                    <ul>
+                        <li><strong>Ánodo:</strong> ocurre la oxidación (polo negativo, cede electrones).</li>
+                        <li><strong>Cátodo:</strong> ocurre la reducción (polo positivo, acepta electrones).</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <strong>Notación de celda:</strong> Ánodo | especie oxidada || especie reducida | Cátodo<br>
+                    Ej: $Zn(s) | Zn^{2+}(1M) || Cu^{2+}(1M) | Cu(s)$
+                </div>
+                <div class="problem-box">
+                    <p><strong>Ejemplo:</strong> Celda Zn-Ni: $Zn(s) + Ni^{2+} \rightarrow Zn^{2+} + Ni(s)$.</p>
+                    <ul>
+                        <li>Ánodo: Zn (se oxida, $-0.76$ V para oxidación)</li>
+                        <li>Cátodo: Ni (se reduce, $-0.26$ V para reducción)</li>
+                        <li>$E^\circ_{celda} = (-0.26) + 0.76 = 0.50$ V</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SUB: ELECTROLISIS -->
+            <div id="sub-electrolisis" class="tab-content">
+                <h3>💧 Celdas Electrolíticas</h3>
+                <div class="info-box">
+                    <p>Una celda electrolítica utiliza <strong>energía eléctrica</strong> para forzar una reacción <strong>no espontánea</strong> (electrólisis). Los electrodos están conectados a una fuente de corriente externa.</p>
+                    <ul>
+                        <li><strong>Cátodo:</strong> polo negativo (se reduce la especie).</li>
+                        <li><strong>Ánodo:</strong> polo positivo (se oxida la especie).</li>
+                    </ul>
+                </div>
+                <div class="tip-box">
+                    <strong>Aspectos cuantitativos (Leyes de Faraday):</strong><br>
+                    $Q = I \cdot t$ (Coulombs), $1\,F = 96485\,C$ (carga de 1 mol de electrones).<br>
+                    Masa depositada = $\frac{Q \cdot M}{n \cdot F}$, donde $n$ = electrones transferidos.
+                </div>
+                <div class="problem-box">
+                    <p><strong>Ejemplo:</strong> Electrólisis de $AlCl_3$ fundido. $Al^{3+} + 3e^- \rightarrow Al(s)$.</p>
+                    <p>Calcular masa de Al depositada con 20 A durante 3000 s.</p>
+                    <details class="solution">
+                        <summary>Ver solución</summary>
+                        <p>$Q = 20 \cdot 3000 = 60000\,C$</p>
+                        <p>Equivalentes = $60000 / 96485 = 0.6219\,eq$</p>
+                        <p>Masa equivalente Al = 27/3 = 9 g/eq</p>
+                        <p>Masa = $0.6219 \times 9 = 5.60\,g$</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ MAPA CONCEPTUAL ============ -->
+<section id="mapa" class="section">
+    <div class="card">
+        <h2>🗺️ Mapa Conceptual: Electroquímica</h2>
+        <p style="margin-bottom:1rem;">Haz <strong>clic en cada nodo</strong> para desplegar u ocultar sus ramas.</p>
+        <div class="map-container">
+            <ul class="map-tree">
+                <li class="has-children open">
+                    <div class="map-node root" onclick="toggleMap(this)">⚡ ELECTROQUÍMICA</div>
+                    <ul>
+                        <li class="has-children">
+                            <div class="map-node branch" onclick="toggleMap(this)">⚖️ Redox</div>
+                            <ul>
+                                <li><span class="map-leaf">Oxidación: pérdida de e⁻ (aumenta N.O.)</span></li>
+                                <li><span class="map-leaf">Reducción: ganancia de e⁻ (disminuye N.O.)</span></li>
+                                <li><span class="map-leaf">Agente reductor (se oxida)</span></li>
+                                <li><span class="map-leaf">Agente oxidante (se reduce)</span></li>
+                            </ul>
+                        </li>
+                        <li class="has-children">
+                            <div class="map-node branch" onclick="toggleMap(this)">🔋 Celdas</div>
+                            <ul>
+                                <li><span class="map-leaf">Galvánicas: espontáneas, generan corriente</span></li>
+                                <li><span class="map-leaf">Electrolíticas: no espontáneas, consumen corriente</span></li>
+                                <li><span class="map-leaf">Ánodo (oxidación) / Cátodo (reducción)</span></li>
+                            </ul>
+                        </li>
+                        <li class="has-children">
+                            <div class="map-node branch" onclick="toggleMap(this)">📊 Potenciales</div>
+                            <ul>
+                                <li><span class="map-leaf">E° reducción (tabla)</span></li>
+                                <li><span class="map-leaf">E° celda = E°oxid + E°red</span></li>
+                                <li><span class="map-leaf">Espontaneidad: E°celda > 0</span></li>
+                            </ul>
+                        </li>
+                        <li class="has-children">
+                            <div class="map-node branch" onclick="toggleMap(this)">⚙️ Balanceo</div>
+                            <ul>
+                                <li><span class="map-leaf">Método ion-electrón</span></li>
+                                <li><span class="map-leaf">Medio ácido (H⁺, H₂O)</span></li>
+                                <li><span class="map-leaf">Medio básico (OH⁻, H₂O)</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section id="flashcards" class="section">
+    <div class="card">
+        <h2>🃏 Flashcards: Electroquímica</h2>
+        <p>Haz <strong>clic en la tarjeta</strong> para voltearla.</p>
+        <div class="fc-stats">
+            <span class="fc-stat good">✅ Buenas: <span id="fc-good">0</span></span>
+            <span class="fc-stat bad">❌ Malas: <span id="fc-bad">0</span></span>
+            <span class="fc-stat pending">⏳ Pendientes: <span id="fc-left">0</span></span>
+        </div>
+        <div class="fc-progress"><div class="fc-progress-bar" id="fc-bar"></div></div>
+        <div class="flashcard-scene" id="fc-scene">
+            <div class="flashcard" id="fc-card">
+                <div class="fc-face fc-front">
+                    <div class="fc-label">PREGUNTA</div>
+                    <div id="fc-question"></div>
+                    <span class="fc-hint">Clic para voltear ✨</span>
+                </div>
+                <div class="fc-face fc-back">
+                    <div class="fc-label">RESPUESTA</div>
+                    <div id="fc-answer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="fc-controls" id="fc-controls">
+            <button class="fc-btn good" id="btn-fc-good" disabled>✅ La sabía</button>
+            <button class="fc-btn bad" id="btn-fc-bad" disabled>❌ No la sabía</button>
+        </div>
+        <div style="text-align:center;">
+            <button class="calc-button" id="resetFlashcardsBtn">🔄 Reiniciar</button>
+        </div>
+    </div>
+</section>
+
+<!-- ============ HERRAMIENTAS ============ -->
+<section id="calculadoras" class="section">
+    <div class="card">
+        <h2>🧮 Herramientas Interactivas</h2>
+        <div id="herramientas-tabs" class="tab-group">
+            <div class="tabs" id="herramientasTabHeaders">
+                <button class="tab active" type="button" data-tab="calc-potencial">🔋 Potencial de Celda</button>
+                <button class="tab" type="button" data-tab="calc-electrolisis">⚡ Electrólisis</button>
+            </div>
+
+            <div id="calc-potencial" class="tab-content active">
+                <div class="calculator">
+                    <div class="calc-title">🔋 Cálculo de $E^\circ_{celda}$ y espontaneidad</div>
+                    <p>Ingresa los potenciales estándar de reducción de las dos semirreacciones (el primero será la reducción, el segundo la oxidación).</p>
+                    <div class="calc-input-group"><label>E° reducción (V):</label><input type="number" id="pot-red" value="0.34" step="0.01"></div>
+                    <div class="calc-input-group"><label>E° oxidación (V):</label><input type="number" id="pot-ox" value="-0.76" step="0.01"></div>
+                    <button class="calc-button" type="button" id="calcPotBtn">Calcular</button>
+                    <div id="res-pot" class="calc-result"></div>
+                </div>
+            </div>
+
+            <div id="calc-electrolisis" class="tab-content">
+                <div class="calculator">
+                    <div class="calc-title">⚡ Masa depositada en electrólisis</div>
+                    <p>Datos: masa molar (g/mol), número de electrones transferidos, corriente (A), tiempo (s).</p>
+                    <div class="calc-input-group"><label>Masa molar (g/mol):</label><input type="number" id="mm-elect" value="27" step="0.1"></div>
+                    <div class="calc-input-group"><label>Electrones transferidos (n):</label><input type="number" id="n-elect" value="3" step="1"></div>
+                    <div class="calc-input-group"><label>Corriente (A):</label><input type="number" id="i-elect" value="20" step="0.1"></div>
+                    <div class="calc-input-group"><label>Tiempo (s):</label><input type="number" id="t-elect" value="3000" step="1"></div>
+                    <button class="calc-button" type="button" id="calcElectBtn">Calcular</button>
+                    <div id="res-elect" class="calc-result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ APLICACIONES ============ -->
+<section id="aplicaciones" class="section">
+    <div class="card">
+        <h2>🏥 Aplicaciones en Ciencias de la Salud</h2>
+        <div class="pharma-box">
+            <h3>🩺 Electroquímica en el Cuerpo Humano</h3>
+            <p>El <strong>potencial de membrana</strong> en neuronas y músculos se genera por gradientes de iones (Na⁺, K⁺, Ca²⁺) y depende de procesos redox en la cadena de transporte de electrones mitocondrial. La <strong>glucosa oxidasa</strong> es un biosensor enzimático que oxida glucosa y produce una señal eléctrica proporcional a la concentración, usado en medidores de glucosa portátiles.</p>
+        </div>
+        <div class="bio-box">
+            <h3>💊 Fármacos y Antirradicales</h3>
+            <p>Muchos fármacos (ej. vitamina C, ácido lipoico) actúan como <strong>agentes reductores</strong> (antioxidantes) neutralizando especies oxidantes. La estabilidad redox de los medicamentos es crucial en su formulación y almacenamiento.</p>
+        </div>
+        <div class="pharma-box">
+            <h3>⚕️ Equilibrio Ácido-Base y Redox</h3>
+            <p>El sistema buffer $H_2CO_3/HCO_3^-$ está íntimamente ligado al transporte de CO₂ y al pH sanguíneo. La oxidación de nutrientes produce energía en forma de ATP mediante reacciones redox acopladas.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ============ MNEMOTECNIAS ============ -->
+<section id="mnemotecnias" class="section">
+    <div class="card">
+        <h2>🧠 Mnemotecnias</h2>
+        <div class="mnemonic-card">
+            <div class="mnemonic-title">Ánodo y Cátodo</div>
+            <p><strong>"ANODO = OXIDACIÓN (pierde electrones, polo negativo)"</strong><br>
+            <strong>"CÁTODO = REDUCCIÓN (gana electrones, polo positivo)"</strong><br>
+            Recuerda: <em>“El gato (cátodo) come electrones”</em> y <em>“El oxígeno se oxida”</em>.</p>
+        </div>
+        <div class="mnemonic-card">
+            <div class="mnemonic-title">Agentes Oxidante y Reductor</div>
+            <p><strong>“El agente oxidante se reduce”</strong> (porque provoca la oxidación de otro).<br>
+            <strong>“El agente reductor se oxida”</strong> (porque provoca la reducción de otro).</p>
+        </div>
+        <div class="mnemonic-card">
+            <div class="mnemonic-title">Potencial de celda positivo = espontáneo</div>
+            <p><strong>“Positivo = Progreso”</strong> (reacción avanza espontáneamente).</p>
+        </div>
+    </div>
+</section>
+
+<!-- ============ GLOSARIO ============ -->
+<section id="glosario" class="section">
+    <div class="card">
+        <h2>📖 Glosario</h2>
+        <div class="glossary-term" onclick="toggleGlossary(this)">
+            <strong>Electrodo Estándar de Hidrógeno (EEH)</strong>
+            <div class="glossary-definition">Electrodo de referencia al que se le asigna potencial 0.00 V. Consiste en un electrodo de platino sumergido en una solución de H⁺ 1 M y burbujeando H₂ a 1 atm.</div>
+        </div>
+        <div class="glossary-term" onclick="toggleGlossary(this)">
+            <strong>Fuerza electromotriz (FEM)</strong>
+            <div class="glossary-definition">Potencial máximo que una celda puede generar. Equivale a la diferencia de potencial entre el cátodo y el ánodo cuando no fluye corriente.</div>
+        </div>
+        <div class="glossary-term" onclick="toggleGlossary(this)">
+            <strong>Electrólisis</strong>
+            <div class="glossary-definition">Proceso en el que se usa corriente eléctrica para forzar una reacción redox no espontánea. Se utiliza para obtener metales puros, refinar cobre, etc.</div>
+        </div>
+        <div class="glossary-term" onclick="toggleGlossary(this)">
+            <strong>Puente salino</strong>
+            <div class="glossary-definition">Dispositivo que conecta las dos semiceldas de una celda galvánica, permitiendo el flujo de iones para mantener la neutralidad eléctrica y cerrar el circuito.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ ERRORES COMUNES ============ -->
+<section id="errores" class="section">
+    <div class="card">
+        <h2>⚠️ Errores Comunes</h2>
+        <div class="error-card">
+            <div class="error-title">Error 1: Invertir el signo del potencial de oxidación</div>
+            <p>Al calcular $E^\circ_{celda}$, recuerda que el potencial de oxidación es el <strong>opuesto</strong> del potencial de reducción.</p>
+            <div class="correction"><strong>Correcto:</strong> Si $E^\circ_{red} = -0.76$ V para $Zn^{2+} + 2e^- \rightarrow Zn$, entonces $E^\circ_{ox} = +0.76$ V para $Zn \rightarrow Zn^{2+} + 2e^-$.</div>
+        </div>
+        <div class="error-card">
+            <div class="error-title">Error 2: Olvidar balancear átomos e iones en el método ion-electrón</div>
+            <p>No se deben sumar semirreacciones sin antes balancear oxígenos con $H_2O$ e hidrógenos con $H^+$ (o $OH^-$).</p>
+            <div class="correction">Siempre verifica que el número de átomos y la carga total estén balanceados en ambos lados.</div>
+        </div>
+        <div class="error-card">
+            <div class="error-title">Error 3: Confundir ánodo y cátodo en celdas electrolíticas</div>
+            <p>En una celda electrolítica, el <strong>cátodo es el polo negativo</strong> (atrae cationes) y el <strong>ánodo es el polo positivo</strong> (atrae aniones). Es al revés que en las galvánicas.</p>
+            <div class="correction"><strong>Regla:</strong> En toda celda, en el cátodo ocurre la reducción; en el ánodo la oxidación. El signo del electrodo depende del tipo de celda.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ BIBLIOGRAFIA ============ -->
+<section id="bibliografia" class="section">
+    <div class="card">
+        <h2>📚 Bibliografía</h2>
+        <ul>
+            <li>Chang, R., & Goldsby, K. A. (2017). <em>Química</em> (12va ed.). McGraw-Hill Interamericana. Capítulos 18 y 19.</li>
+            <li>Brown, T. L., LeMay, H. E., Bursten, B. E., & Murphy, C. J. (2018). <em>Química: La Ciencia Central</em> (14ª ed.). Pearson. Capítulo 20.</li>
+            <li>Brady, J. E., Senese, F., & Alexander, G. S. (2017). <em>Chemistry: Matter and Its Changes</em> (7th ed.). Wiley.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="quiz" class="section">
+    <div class="card">
+        <h2>🎯 Quiz de Autoevaluación</h2>
+        <div class="quiz-container" id="quiz-box">
+            <div class="quiz-progress"><div class="quiz-progress-bar-bg"><div class="quiz-progress-bar" id="quiz-bar"></div></div></div>
+            <div class="quiz-stats" id="quiz-stats-inline" style="display:flex; justify-content:space-between; margin-bottom:1rem; font-size:0.95rem;">
+                <span style="color:#D97706; font-weight:700;">Pregunta: <span id="quiz-current">1</span> de <span id="quiz-total">10</span></span>
+                <span style="color:#38a169; font-weight:700;">Puntaje: <span id="quiz-score">0</span> pts</span>
+            </div>
+            <div id="quiz-content"></div>
+            <div class="quiz-stats" id="quiz-stats" style="display:none;">
+                <span class="quiz-stat" style="background:#38a169">✅ Correctas: <span id="quiz-correct">0</span></span>
+                <span class="quiz-stat" style="background:#e53e3e">❌ Incorrectas: <span id="quiz-incorrect">0</span></span>
+                <span class="quiz-stat" style="background:var(--QII-blue)">🏆 Puntaje Final: <span id="quiz-final-score">0</span> pts</span>
+            </div>
+            <button class="calc-button" id="resetQuizBtn" style="display:none; margin-top:1rem;">🔄 Reiniciar Quiz</button>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<footer class="footer">
+    <p>&copy; 2025 Química II - Plataforma Educativa Universitaria | Clase 12</p>
+</footer>
+
+<script>
+    // ======================== FUNCIONES GLOBALES ========================
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.nav-btn[data-section="${id}"]`)?.classList.add('active');
+        window.scrollTo(0,0);
+        // Volver a renderizar MathJax si es necesario
+        if (window.MathJax) MathJax.typeset();
+    }
+
+    function showTab(groupId, tabId) {
+        const group = document.getElementById(groupId);
+        if (!group) return;
+        group.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        group.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        const targetContent = document.getElementById(tabId);
+        if (targetContent) targetContent.classList.add('active');
+        const tabBtn = group.querySelector(`.tab[data-tab="${tabId}"]`);
+        if (tabBtn) tabBtn.classList.add('active');
+        if (window.MathJax) MathJax.typeset();
+    }
+
+    function toggleMap(el) {
+        el.parentElement.classList.toggle('open');
+    }
+
+    function toggleGlossary(el) {
+        el.querySelector('.glossary-definition').classList.toggle('show');
+    }
+
+    // ======================== FLASHCARDS ========================
+    const flashcards = [
+        {q: "¿Qué es una reacción de oxidación?", a: "Proceso en el que una especie pierde electrones, aumentando su número de oxidación. El agente reductor se oxida."},
+        {q: "¿Qué es una reacción de reducción?", a: "Proceso en el que una especie gana electrones, disminuyendo su número de oxidación. El agente oxidante se reduce."},
+        {q: "¿Cuál es el potencial estándar del Electrodo de Hidrógeno (EEH)?", a: "0.00 V (por definición)."},
+        {q: "¿Qué indica un $E^\\circ_{celda}$ positivo?", a: "Que la reacción redox es espontánea (celda galvánica)."},
+        {q: "¿Cuál es la fórmula para calcular la masa depositada en electrólisis?", a: "$m = \\frac{Q \\cdot M}{n \\cdot F}$, donde $Q = I \\cdot t$, $M$ es masa molar, $n$ electrones transferidos, $F=96485\\,C$."},
+        {q: "En una celda galvánica, ¿qué electrodo es el polo negativo?", a: "El ánodo (donde ocurre la oxidación)."},
+        {q: "En una celda electrolítica, ¿qué electrodo es el polo negativo?", a: "El cátodo (donde ocurre la reducción)."},
+        {q: "¿Qué función cumple el puente salino?", a: "Mantener la neutralidad eléctrica y cerrar el circuito permitiendo el flujo de iones."},
+        {q: "¿Cómo se balancean los oxígenos en el método ion-electrón en medio ácido?", a: "Agregando moléculas de $H_2O$ al lado que los necesite."},
+        {q: "¿Cómo se balancean los hidrógenos en medio ácido?", a: "Agregando $H^+$ al lado que los necesite."},
+        {q: "¿Qué es un agente oxidante?", a: "Especie que acepta electrones y se reduce, provocando la oxidación de otra."},
+        {q: "¿Qué es un agente reductor?", a: "Especie que dona electrones y se oxida, provocando la reducción de otra."}
+    ];
+    let fcIdx = 0, fcGood = 0, fcBad = 0, fcLeft = flashcards.length;
+
+    function updateFcStats() {
+        document.getElementById('fc-good').innerText = fcGood;
+        document.getElementById('fc-bad').innerText = fcBad;
+        document.getElementById('fc-left').innerText = fcLeft;
+        document.getElementById('fc-bar').style.width = ((fcGood+fcBad)/flashcards.length * 100) + '%';
+    }
+
+    function loadCard() {
+        if(fcIdx >= flashcards.length) {
+            document.getElementById('fc-question').innerHTML = "¡Terminaste las flashcards!";
+            document.getElementById('fc-answer').innerHTML = "Revisa tus estadísticas arriba.";
+            document.getElementById('btn-fc-good').disabled = true;
+            document.getElementById('btn-fc-bad').disabled = true;
+            return;
+        }
+        const card = flashcards[fcIdx];
+        document.getElementById('fc-question').innerHTML = card.q;
+        document.getElementById('fc-answer').innerHTML = card.a;
+        document.getElementById('fc-card').classList.remove('flipped');
+        document.getElementById('btn-fc-good').disabled = true;
+        document.getElementById('btn-fc-bad').disabled = true;
+        if(window.MathJax) MathJax.typeset();
+    }
+
+    function flipCard() {
+        const card = document.getElementById('fc-card');
+        card.classList.toggle('flipped');
+        if(card.classList.contains('flipped')) {
+            document.getElementById('btn-fc-good').disabled = false;
+            document.getElementById('btn-fc-bad').disabled = false;
+        }
+    }
+
+    function gradeCard(isGood) {
+        if(isGood) fcGood++; else fcBad++;
+        fcLeft--;
+        fcIdx++;
+        updateFcStats();
+        loadCard();
+    }
+
+    function resetFlashcards() {
+        fcIdx=0; fcGood=0; fcBad=0; fcLeft=flashcards.length;
+        updateFcStats(); loadCard();
+    }
+
+    // ======================== CALCULADORAS ========================
+    function calcularPotencial() {
+        const red = parseFloat(document.getElementById('pot-red').value);
+        const ox = parseFloat(document.getElementById('pot-ox').value);
+        const Ecelda = red + ox;
+        const esp = Ecelda > 0 ? 'ESPONTÁNEA ✅' : 'NO ESPONTÁNEA ❌';
+        const res = document.getElementById('res-pot');
+        res.innerHTML = `<strong>Resultado:</strong><br> E° celda = ${Ecelda.toFixed(3)} V<br> La reacción es ${esp}`;
+        res.classList.add('show');
+    }
+
+    function calcularElectrolisis() {
+        const M = parseFloat(document.getElementById('mm-elect').value);
+        const n = parseInt(document.getElementById('n-elect').value);
+        const I = parseFloat(document.getElementById('i-elect').value);
+        const t = parseFloat(document.getElementById('t-elect').value);
+        const F = 96485;
+        const Q = I * t;
+        const masa = (Q * M) / (n * F);
+        const res = document.getElementById('res-elect');
+        res.innerHTML = `<strong>Resultado:</strong><br> Carga = ${Q.toFixed(0)} C<br> Masa depositada = ${masa.toFixed(4)} g`;
+        res.classList.add('show');
+    }
+
+    // ======================== QUIZ ========================
+    // Banco de 30 preguntas
+    const questionBank = [
+        {q: "¿Qué ocurre con el número de oxidación en una oxidación?", options: ["Aumenta", "Disminuye", "No cambia", "Se duplica"], correct: 0, exp: "En la oxidación, la especie pierde electrones, por lo que su número de oxidación aumenta."},
+        {q: "¿Cuál es el potencial estándar de reducción del electrodo de hidrógeno?", options: ["1.00 V", "0.00 V", "-0.76 V", "0.34 V"], correct: 1, exp: "El EEH se define con E°=0.00 V."},
+        {q: "En una celda galvánica, el ánodo es el polo:", options: ["Positivo", "Negativo", "Neutro", "Alterno"], correct: 1, exp: "El ánodo es negativo porque allí se generan electrones por oxidación."},
+        {q: "¿Cuál de estos es un agente oxidante fuerte?", options: ["Zn", "Cu", "F₂", "Na"], correct: 2, exp: "El F₂ tiene un alto potencial de reducción (E°=+2.87 V), por lo que es un oxidante muy fuerte."},
+        {q: "Para balancear oxígenos en medio ácido, se agrega:", options: ["H₂O", "OH⁻", "H⁺", "O₂"], correct: 0, exp: "Se agregan moléculas de H₂O al lado deficitario en oxígeno."},
+        {q: "¿Cuántos electrones se transfieren en la reacción: Cr₂O₇²⁻ → 2Cr³⁺?", options: ["3", "6", "2", "1"], correct: 1, exp: "El cromo pasa de +6 a +3, cada átomo gana 3 electrones, y hay 2 átomos, total 6 e⁻."},
+        {q: "¿Qué indica un E°celda negativo?", options: ["Reacción espontánea", "Reacción no espontánea", "Reacción en equilibrio", "Reacción exotérmica"], correct: 1, exp: "E°celda < 0 significa que la reacción no es espontánea (necesita energía)."},
+        {q: "En una celda electrolítica, la reducción ocurre en:", options: ["Ánodo", "Cátodo", "Puente salino", "Electrodo de referencia"], correct: 1, exp: "El cátodo siempre es el sitio de la reducción."},
+        {q: "¿Cuál es la carga de 1 mol de electrones (Faraday)?", options: ["96485 C", "1 C", "6.022×10²³ C", "96500 C"], correct: 0, exp: "1 Faraday = 96485 Coulombios."},
+        {q: "¿Qué especie se oxida en la reacción Zn + Cu²⁺ → Zn²⁺ + Cu?", options: ["Cu²⁺", "Zn", "Zn²⁺", "Cu"], correct: 1, exp: "El Zn pasa de 0 a +2 (pierde electrones), por lo tanto se oxida."},
+        {q: "¿Qué función tiene el puente salino en una celda galvánica?", options: ["Generar electrones", "Mantener la neutralidad", "Actuar como electrodo", "Medir el voltaje"], correct: 1, exp: "Permite el flujo de iones para equilibrar cargas y cerrar el circuito."},
+        {q: "En el método ion-electrón en medio básico, después de balancear en ácido se añade:", options: ["H₂O", "OH⁻", "H⁺", "Na⁺"], correct: 1, exp: "Se añaden iones OH⁻ para neutralizar los H⁺ y formar H₂O."},
+        {q: "¿Cuál es el potencial de oxidación del Zn si su potencial de reducción es -0.76 V?", options: ["-0.76 V", "0.76 V", "1.52 V", "0.00 V"], correct: 1, exp: "El potencial de oxidación es el opuesto: +0.76 V."},
+        {q: "¿Qué ocurre con el pH en el cátodo de una celda de combustión?", options: ["Aumenta", "Disminuye", "No cambia", "Se vuelve neutro"], correct: 1, exp: "En el cátodo se consume H⁺ (en medio ácido), por lo que el pH aumenta (se vuelve más básico)."},
+        {q: "¿Cuántos electrones se necesitan para reducir un mol de Al³⁺ a Al?", options: ["1", "2", "3", "4"], correct: 2, exp: "Al³⁺ + 3e⁻ → Al, se requieren 3 electrones por mol."},
+        {q: "¿Qué tipo de celda convierte energía química en eléctrica?", options: ["Electrolítica", "Galvánica", "De concentración", "De combustión"], correct: 1, exp: "Las celdas galvánicas (voltaicas) generan electricidad a partir de reacciones espontáneas."},
+        {q: "¿Cuál es el agente oxidante en la reacción: 2Fe²⁺ + Cl₂ → 2Fe³⁺ + 2Cl⁻?", options: ["Fe²⁺", "Cl₂", "Fe³⁺", "Cl⁻"], correct: 1, exp: "El Cl₂ se reduce a Cl⁻ (gana electrones), por lo tanto es el agente oxidante."},
+        {q: "¿Qué sucede con la concentración de iones en el ánodo de una celda galvánica?", options: ["Aumenta", "Disminuye", "Permanece igual", "Se duplica"], correct: 0, exp: "En el ánodo se generan iones (oxidación), por lo que su concentración aumenta."},
+        {q: "¿Cuál es el voltaje mínimo necesario para electrolizar NaCl fundido? (E° Na⁺/Na = -2.71 V, E° Cl₂/Cl⁻ = -1.36 V)", options: ["4.07 V", "1.35 V", "2.71 V", "0.00 V"], correct: 0, exp: "E°celda = -2.71 + (-1.36) = -4.07 V. Se necesita al menos 4.07 V para forzar la reacción."},
+        {q: "En una celda electrolítica, los cationes se mueven hacia:", options: ["Ánodo", "Cátodo", "Puente salino", "Fuente de poder"], correct: 1, exp: "Los cationes son atraídos al cátodo (polo negativo)."},
+        {q: "¿Qué ley relaciona la cantidad de sustancia depositada con la carga eléctrica?", options: ["Ley de Faraday", "Ley de Ohm", "Ley de Hess", "Ley de Henry"], correct: 0, exp: "Las leyes de Faraday cuantifican la relación entre carga y masa depositada."},
+        {q: "¿Cuál es el estado de oxidación del oxígeno en los peróxidos?", options: ["-2", "-1", "0", "+2"], correct: 1, exp: "En peróxidos (H₂O₂), el oxígeno tiene número de oxidación -1."},
+        {q: "¿Qué ocurre con la masa del electrodo de zinc en una celda Zn-Cu cuando la celda funciona?", options: ["Aumenta", "Disminuye", "No cambia", "Se funde"], correct: 1, exp: "El zinc se oxida a Zn²⁺, por lo que el electrodo de zinc se disuelve y su masa disminuye."},
+        {q: "¿Cuál es la notación correcta para una celda con ánodo de Zn y cátodo de Cu?", options: ["Zn|Zn²⁺ || Cu²⁺|Cu", "Cu|Cu²⁺ || Zn²⁺|Zn", "Zn²⁺|Zn || Cu²⁺|Cu", "Cu²⁺|Cu || Zn|Zn²⁺"], correct: 0, exp: "La notación: Ánodo (Zn) | Zn²⁺ || Cu²⁺ | Cátodo (Cu)."},
+        {q: "¿Cuántos gramos de cobre (M=63.5) se depositan con 2 A durante 9650 s? (Cu²⁺ + 2e⁻ → Cu)", options: ["6.35 g", "12.7 g", "63.5 g", "3.17 g"], correct: 0, exp: "Q = 2×9650 = 19300 C; eq = 19300/96485 = 0.2; masa = 0.2 × (63.5/2) = 6.35 g."},
+        {q: "¿Qué especie se reduce en la electrólisis del agua?", options: ["H₂O", "H⁺", "OH⁻", "O₂"], correct: 1, exp: "En el cátodo, 2H⁺ + 2e⁻ → H₂, por lo que el H⁺ se reduce."},
+        {q: "¿Cuál es el potencial estándar de la celda: Fe³⁺/Fe²⁺ (E°=0.77 V) y Zn²⁺/Zn (E°=-0.76 V) si el Fe³⁺ se reduce?", options: ["1.53 V", "0.01 V", "-0.01 V", "0.77 V"], correct: 0, exp: "E°celda = E°red (Fe³⁺/Fe²⁺) + E°ox (Zn/Zn²⁺) = 0.77 + 0.76 = 1.53 V."},
+        {q: "En el balanceo redox, ¿qué se añade para balancear oxígenos en medio básico?", options: ["H₂O y OH⁻", "Solo OH⁻", "Solo H₂O", "O₂"], correct: 0, exp: "Se añade H₂O al lado deficitario y OH⁻ al otro lado, o se usa el método de medio ácido y luego se neutraliza."},
+        {q: "¿Cuál es el número de oxidación del cromo en Cr₂O₇²⁻?", options: ["+3", "+6", "+7", "+2"], correct: 1, exp: "El oxígeno es -2, total -14; la carga del ion es -2, entonces 2Cr + (-14) = -2 → Cr = +6."},
+        {q: "¿Qué tipo de proceso es la electrólisis del NaCl fundido?", options: ["Espontáneo", "No espontáneo", "Exotérmico", "Endotérmico"], correct: 1, exp: "Se requiere energía eléctrica para forzar la reacción, por lo que es no espontáneo."}
+    ];
+
+    // Estado del quiz: seleccionar 10 aleatorias
+    let quizQuestions = [];
+    let quizIdx = 0;
+    let quizCorrect = 0;
+    let quizIncorrect = 0;
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function pickRandomQuestions(n) {
+        const shuffled = shuffleArray([...questionBank]);
+        return shuffled.slice(0, n);
+    }
+
+    function initQuiz() {
+        quizQuestions = pickRandomQuestions(10);
+        quizIdx = 0;
+        quizCorrect = 0;
+        quizIncorrect = 0;
+        document.getElementById('quiz-stats').style.display = 'none';
+        document.getElementById('resetQuizBtn').style.display = 'none';
+        document.getElementById('quiz-stats-inline').style.display = 'flex';
+        document.getElementById('quiz-current').innerText = '1';
+        document.getElementById('quiz-total').innerText = '10';
+        document.getElementById('quiz-score').innerText = '0';
+        document.getElementById('quiz-bar').style.width = '0%';
+        loadQuiz();
+    }
+
+    function loadQuiz() {
+        const container = document.getElementById('quiz-content');
+        if (!container) return;
+
+        document.getElementById('quiz-current').innerText = Math.min(quizIdx + 1, quizQuestions.length);
+        document.getElementById('quiz-total').innerText = quizQuestions.length;
+        document.getElementById('quiz-score').innerText = quizCorrect * 10; // 10 pts por pregunta
+
+        if (quizIdx >= quizQuestions.length) {
+            document.getElementById('quiz-stats-inline').style.display = 'none';
+            document.getElementById('quiz-stats').style.display = 'flex';
+            document.getElementById('resetQuizBtn').style.display = 'inline-block';
+            document.getElementById('quiz-correct').innerText = quizCorrect;
+            document.getElementById('quiz-incorrect').innerText = quizIncorrect;
+            document.getElementById('quiz-final-score').innerText = quizCorrect * 10;
+            container.innerHTML = "<h3 style='color:#D97706; text-align:center;'>Quiz Finalizado 🎉</h3>";
+            return;
+        }
+        const q = quizQuestions[quizIdx];
+        let html = `<div class="quiz-question-card"><div class="quiz-question">${quizIdx+1}. ${q.q}</div><div class="quiz-options">`;
+        q.options.forEach((opt, i) => {
+            html += `<button class="quiz-option" type="button" data-optindex="${i}">${opt}</button>`;
+        });
+        html += `</div><div class="quiz-explanation" id="quiz-exp-${quizIdx}">${q.exp}</div></div>`;
+        container.innerHTML = html;
+        document.getElementById('quiz-bar').style.width = ((quizIdx) / quizQuestions.length * 100) + '%';
+
+        container.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                checkQuiz(parseInt(this.dataset.optindex), q.correct, this);
+            });
+        });
+    }
+
+    function checkQuiz(selected, correct, btn) {
+        const parent = btn.closest('.quiz-question-card');
+        const opts = parent.querySelectorAll('.quiz-option');
+        opts.forEach(o => o.disabled = true);
+
+        if (selected === correct) {
+            btn.classList.add('correct');
+            quizCorrect++;
+        } else {
+            btn.classList.add('incorrect');
+            opts[correct].classList.add('correct');
+            quizIncorrect++;
+        }
+        document.getElementById(`quiz-exp-${quizIdx}`).style.display = 'block';
+        quizIdx++;
+        setTimeout(loadQuiz, 1500);
+    }
+
+    function resetQuiz() {
+        initQuiz();
+    }
+
+    // ============================================================
+    //  INICIALIZACIÓN CON DOMContentLoaded
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        // Navegación
+        document.querySelectorAll('.nav-btn[data-section]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const sectionId = this.dataset.section;
+                showSection(sectionId);
+                if (sectionId === 'quiz') initQuiz();
+            });
+        });
+
+        // Tabs de Conceptos
+        const conceptosGroup = document.getElementById('conceptos-tabs');
+        conceptosGroup.querySelectorAll('.tab[data-tab]').forEach(tab => {
+            tab.addEventListener('click', function() {
+                showTab('conceptos-tabs', this.dataset.tab);
+            });
+        });
+
+        // Tabs de Herramientas
+        const herramientasGroup = document.getElementById('herramientas-tabs');
+        herramientasGroup.querySelectorAll('.tab[data-tab]').forEach(tab => {
+            tab.addEventListener('click', function() {
+                showTab('herramientas-tabs', this.dataset.tab);
+            });
+        });
+
+        // Flashcards
+        document.getElementById('fc-card').addEventListener('click', flipCard);
+        document.getElementById('btn-fc-good').addEventListener('click', function() { gradeCard(true); });
+        document.getElementById('btn-fc-bad').addEventListener('click', function() { gradeCard(false); });
+        document.getElementById('resetFlashcardsBtn').addEventListener('click', resetFlashcards);
+
+        // Calculadoras
+        document.getElementById('calcPotBtn').addEventListener('click', calcularPotencial);
+        document.getElementById('calcElectBtn').addEventListener('click', calcularElectrolisis);
+
+        // Quiz
+        document.getElementById('resetQuizBtn').addEventListener('click', resetQuiz);
+
+        // Inicializar flashcards y quiz (al cargar, el quiz se inicia cuando se navega a la pestaña)
+        updateFcStats();
+        loadCard();
+        // No iniciar quiz automáticamente para no mostrar preguntas hasta que el usuario entre a la pestaña.
+        // Se iniciará al hacer clic en "Quiz".
+
+        // Asegurar que las primeras pestañas estén activas
+        showTab('conceptos-tabs', 'sub-redox');
+        showTab('herramientas-tabs', 'calc-potencial');
+    });
+</script>
+
+</body>
+</html>
